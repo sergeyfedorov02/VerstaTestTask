@@ -18,13 +18,12 @@
                              AllowGrouping="true"
                              AllowColumnPicking="true"
                              AllowColumnReorder="true"
-                             FilterMode="FilterMode.CheckBoxList"
+                             FilterMode="FilterMode.Advanced"
                              
                              FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                              AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" PageSize="@pageSize">
         <HeaderTemplate>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem;" Wrap="FlexWrap.Wrap">
-
                 <RadzenButton Icon="add" Click="@CreateOrder" MouseEnter="@(args => ShowTooltip(args, "Создать заказ"))" />
                 <RadzenButton Icon="refresh" Click="@(_ => grid.Reload())" MouseEnter="@(args => ShowTooltip(args, "Обновить данные"))" />
                 <RadzenButton Icon="filter_alt_off" Click="@ResetFiltersAsync" MouseEnter="@(args => ShowTooltip(args, "Cбросить фильтры"))" />
@@ -34,6 +33,7 @@
             Страница @context.CurrentPage из @context.NumberOfPages <b>(Всего @context.TotalCount записей)</b>
         </PagingSummaryTemplate>
         <Columns>
+            <RadzenDataGridColumn TItem="Order" Property="Id" Title="Номер заказа" Filterable=false/>
             <RadzenDataGridColumn TItem="Order" Property="SenderCity.CityName" Title="Город отправителя" />
             <RadzenDataGridColumn TItem="Order" Property="SenderAddress" Title="Адрес отправителя" />
             <RadzenDataGridColumn TItem="Order" Property="RecipientCity.CityName" Title="Город получателя" />

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Radzen;
+using System.Linq.Dynamic.Core;
 
 namespace VerstaTestTask.Extensions
 {
@@ -8,10 +9,10 @@ namespace VerstaTestTask.Extensions
 
         public static async Task<ODataServiceResult<T>> GetDataAsync<T>(this IQueryable<T> items, Query query, string defaultOrder = null)
         {
-            //if (!string.IsNullOrEmpty(query.Filter))
-            //{
-            //    items = items.Where(ApplyUtcTimeToFilter(query.Filter));
-            //}
+            if (!string.IsNullOrEmpty(query.Filter))
+            {
+                items = items.Where(query.Filter);
+            }
 
             if (!string.IsNullOrEmpty(query.OrderBy))
             {

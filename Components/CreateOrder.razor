@@ -1,0 +1,43 @@
+﻿@using VerstaTestTask.Models
+<RadzenStack Orientation="Orientation.Vertical">
+    @* настройка даты *@
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-p-12">
+        <RadzenLabel Text="Выберите дату" Component="ChooseDate" />
+        <RadzenDatePicker @bind-value="@date" Name="ChooseDate"></RadzenDatePicker>
+    </RadzenStack>
+
+    @* Настройка Отправителя *@
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+        <RadzenLabel Text="Город отправителя" Component="SenderCityName" />
+        <RadzenDropDown @bind-Value="@senderCityId" Data=@cities LoadData=@LoadCities Count="@citiesCount" AllowVirtualization="true" AllowClear="true" Name="SenderCityName"
+                        AllowFiltering="true" TextProperty="@nameof(City.CityName)" ValueProperty="@nameof(City.Id)" Style="width: 100%; max-width: 400px;" />
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+        <RadzenLabel Text="Адрес отправителя" Component="SenderAddress" />
+        <RadzenTextBox @bind-Value=@senderAddress Style="width: 100%" aria-label="SenderAddress" />
+    </RadzenStack>
+
+    @* Настройка Получаетля *@
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+        <RadzenLabel Text="Город получателя" Component="RecipientCityName" />
+        <RadzenDropDown @bind-Value="@recipientCityId" Data=@cities LoadData=@LoadCities Count="@citiesCount" AllowVirtualization="true" AllowClear="true" Name="RecipientCityName"
+                        AllowFiltering="true" TextProperty="@nameof(City.CityName)" ValueProperty="@nameof(City.Id)" Style="width: 100%; max-width: 400px;" />
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+        <RadzenLabel Text="Адрес получателя" Component="RecipientAddress" />
+        <RadzenTextBox @bind-Value=@recipientAddress Style="width: 100%" aria-label="RecipientAddress" />
+    </RadzenStack>
+
+    @* Вес груза *@
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+        <RadzenLabel Text="Вес груза" Component="CargoWeight" />
+        <RadzenNumeric Min="1" @bind-Value=@cargoWeight InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" aria-label="RecipientAddress" />
+    </RadzenStack>
+
+    @* кнопка добавления *@
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+        <RadzenStack Style="width: 100%" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
+            <RadzenButton Disabled="!CanAdd()" Click="(_ => DialogService.Close(GetCreateRequest()))" Variant="Variant.Flat" Text="Добавить" Style="width: 150px" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenStack>

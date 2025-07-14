@@ -1,16 +1,9 @@
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
-using System.Net.Http;
 using VerstaTestTask.Models;
+using VerstaTestTask.Services;
 
 namespace VerstaTestTask.Components.Pages
 {
@@ -93,9 +86,22 @@ namespace VerstaTestTask.Components.Pages
             TooltipService.Open(elementReference, text, options);
         }
 
-        protected void CreateOrder()
+        protected async Task CreateOrder()
         {
-            //TODO
+            if (await DialogService.OpenAsync<CreateOrder>(
+                "Добавление заказа",
+                new Dictionary<string, object> { },
+                new DialogOptions
+                {
+                    Resizable = true,
+                    Draggable = true
+                }
+            ) is CreateOrderRequest createRequest)
+            {
+                OrdersService.CreateOrder(createRequest);
+
+                await grid.Reload();
+            }
         }
     }
 }
