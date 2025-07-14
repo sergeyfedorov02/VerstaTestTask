@@ -1,31 +1,47 @@
 @page "/"
-<PageTitle>Index</PageTitle>
-<RadzenRow Gap="5" RowGap="5">
-    <RadzenColumn Size="12">
-        <RadzenText Text="Welcome to your new app" TextStyle="Radzen.Blazor.TextStyle.DisplayH2" TagName="Radzen.Blazor.TagName.Auto"></RadzenText>
-        <RadzenText Text="Your Success Is Our Biggest Priority" TextStyle="Radzen.Blazor.TextStyle.H4" TagName="Radzen.Blazor.TagName.H2" class="mt-5"></RadzenText>
-        <RadzenText Text="With Radzen Blazor Studio, application development is just one-click away." TextStyle="Radzen.Blazor.TextStyle.Body1" TagName="Radzen.Blazor.TagName.Auto" class="mt-4" Style="font-size: 20px; line-height: 24px"></RadzenText>
-        <RadzenText Text="Simple to setup, maintain and update." TextStyle="Radzen.Blazor.TextStyle.Body1" TagName="Radzen.Blazor.TagName.Auto" class="mt-3" Style="font-size: 20px; line-height: 24px"></RadzenText>
-        <RadzenCard Style="margin-top: 40px; padding: 20px 40px 40px;">
-            <RadzenRow>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <RadzenIcon Icon="smart_button" Style="margin-top: 20px; width: 48px; height: 48px; font-size: 48px; color: var(--rz-text-title-color);"></RadzenIcon>
-                    <RadzenText Text="Learn the Fundamentals" TextStyle="Radzen.Blazor.TextStyle.DisplayH6" TagName="Radzen.Blazor.TagName.H3"></RadzenText>
-                    <RadzenLink Text="Docs" Path="https://www.radzen.com/blazor-studio/documentation/" Icon="east" Target="_blank" Style="font-size: 18px"></RadzenLink>
-                    <RadzenLink Text="Videos" Path="https://youtube.com/playlist?list=PLQyJPeb3xHcBij_RbHD__2TOo8Jv5HQVc" Icon="east" Target="_blank" Style="display: block; font-size: 18px"></RadzenLink>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <RadzenIcon Icon="code" Style="margin-top: 20px; width: 48px; height: 48px; font-size: 48px; color: var(--rz-text-title-color);"></RadzenIcon>
-                    <RadzenText Text="Radzen Blazor Components" TextStyle="Radzen.Blazor.TextStyle.DisplayH6" TagName="Radzen.Blazor.TagName.H3"></RadzenText>
-                    <RadzenLink Text="Demos" Path="https://blazor.radzen.com" Icon="east" Target="_blank" Style="font-size: 18px"></RadzenLink>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <RadzenIcon Icon="people_outline" Style="margin-top: 20px; width: 48px; height: 48px; font-size: 48px; color: var(--rz-text-title-color);"></RadzenIcon>
-                    <RadzenText Text="Radzen Community" TextStyle="Radzen.Blazor.TextStyle.DisplayH6" TagName="Radzen.Blazor.TagName.H3"></RadzenText>
-                    <RadzenLink Text="Radzen Blazor Studio Forums" Path="https://forum.radzen.com/c/radzen-blazor-studio/12" Icon="east" Target="_blank" Style="font-size: 18px"></RadzenLink>
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCard>
-    </RadzenColumn>
-</RadzenRow>
+@using VerstaTestTask.Extensions
+@using VerstaTestTask.Models
+
+<PageTitle>Заказы</PageTitle>
+
+<RadzenStack Gap="1rem">
+      <LocalizedDataGrid @ref=@grid
+                             Data="@orders" Count="@count" TItem="Order" LoadData="@LoadData"
+                             ColumnWidth="140px"
+                             PagerAlwaysVisible="true"
+                             LogicalFilterOperator="LogicalFilterOperator.And"
+                             IsLoading="@isLoading"
+                             AllowMultiColumnSorting="false"
+                             PageSizeOptions="@pageSizeOptions"
+                             ShowPagingSummary="true"
+                             AllowFiltering="true" AllowSorting="true" AllowColumnResize="true"
+                             AllowGrouping="true"
+                             AllowColumnPicking="true"
+                             AllowColumnReorder="true"
+                             FilterMode="FilterMode.CheckBoxList"
+                             
+                             FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                             AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" PageSize="@pageSize">
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem;" Wrap="FlexWrap.Wrap">
+
+                <RadzenButton Icon="add" Click="@CreateOrder" MouseEnter="@(args => ShowTooltip(args, "Создать заказ"))" />
+                <RadzenButton Icon="refresh" Click="@(_ => grid.Reload())" MouseEnter="@(args => ShowTooltip(args, "Обновить данные"))" />
+                <RadzenButton Icon="filter_alt_off" Click="@ResetFiltersAsync" MouseEnter="@(args => ShowTooltip(args, "Cбросить фильтры"))" />
+            </RadzenStack>
+        </HeaderTemplate>
+        <PagingSummaryTemplate>
+            Страница @context.CurrentPage из @context.NumberOfPages <b>(Всего @context.TotalCount записей)</b>
+        </PagingSummaryTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="Order" Property="SenderCity.CityName" Title="Город отправителя" />
+            <RadzenDataGridColumn TItem="Order" Property="SenderAddress" Title="Адрес отправителя" />
+            <RadzenDataGridColumn TItem="Order" Property="RecipientCity.CityName" Title="Город получателя" />
+            <RadzenDataGridColumn TItem="Order" Property="RecipientAddress" Title="Адрес получателя" />
+            <RadzenDataGridColumn TItem="Order" Property="CargoWeight" Title="Вес груза" />
+            <RadzenDataGridColumn TItem="Order" Property="OrderDate" Title="Дата забора груза" />
+ 
+        </Columns>
+    </LocalizedDataGrid> 
+</RadzenStack>
 

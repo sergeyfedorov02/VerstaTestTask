@@ -19,6 +19,9 @@ builder.Services.AddRadzenCookieThemeService(options =>
 });
 builder.Services.AddHttpClient();
 
+//Регистрация сервиса
+builder.Services.AddScoped<VerstaTestTask.OrdersService>();
+
 builder.Services.AddDbContext<VerstaDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("VerstaConnection"));
