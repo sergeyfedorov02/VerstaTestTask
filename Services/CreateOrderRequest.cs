@@ -1,5 +1,8 @@
 ﻿namespace VerstaTestTask.Services
 {
+    /// <summary>
+    /// Запрос на создание заказа
+    /// </summary>
     public class CreateOrderRequest
     {
         public DateOnly OrderDate {  get; set; }

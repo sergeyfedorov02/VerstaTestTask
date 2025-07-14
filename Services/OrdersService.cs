@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Radzen;
-
 using VerstaTestTask.Data;
 using VerstaTestTask.Models;
 using VerstaTestTask.Extensions;
 using VerstaTestTask.Services;
-using System.Collections.Concurrent;
 
 namespace VerstaTestTask
 {
