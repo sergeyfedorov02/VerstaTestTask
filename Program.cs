@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Radzen;
 using VerstaTestTask.Components;
+using VerstaTestTask.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,14 @@ builder.Services.AddRadzenCookieThemeService(options =>
     options.Duration = TimeSpan.FromDays(365);
 });
 builder.Services.AddHttpClient();
+
+builder.Services.AddDbContext<VerstaDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("VerstaConnection"));
+});
+builder.Services.AddTransient<Func<VerstaDbContext>>(provider =>
+               () => provider.CreateScope().ServiceProvider.GetRequiredService<VerstaDbContext>());
+
 var app = builder.Build();
 
 
@@ -44,5 +54,10 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
+
+// Миграция базы данных
+var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<VerstaDbContext>();
+db.Database.SetCommandTimeout(60);
+db.Database.Migrate();
 
 app.Run();
