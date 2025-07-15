@@ -1,43 +1,116 @@
 ﻿@using VerstaTestTask.Models
-<RadzenStack Orientation="Orientation.Vertical">
-    @* настройка даты *@
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-p-12">
-        <RadzenLabel Text="Выберите дату" Component="ChooseDate" />
-        <RadzenDatePicker @bind-value="@date" Name="ChooseDate"></RadzenDatePicker>
-    </RadzenStack>
+@using VerstaTestTask.Services
 
-    @* Настройка Отправителя *@
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-        <RadzenLabel Text="Город отправителя" Component="SenderCityName" />
-        <RadzenDropDown @bind-Value="@senderCityId" Data=@cities LoadData=@LoadCities Count="@citiesCount" AllowVirtualization="true" AllowClear="true" Name="SenderCityName"
-                        AllowFiltering="true" TextProperty="@nameof(City.CityName)" ValueProperty="@nameof(City.Id)" Style="width: 100%; max-width: 400px;" />
-    </RadzenStack>
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-        <RadzenLabel Text="Адрес отправителя" Component="SenderAddress" />
-        <RadzenTextBox @bind-Value=@senderAddress Style="width: 100%" aria-label="SenderAddress" />
-    </RadzenStack>
+<RadzenStack style="min-width: 100%; box-sizing: border-box;">
+    <RadzenTemplateForm TItem="EditOrderModel" Data=@model Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+        <RadzenFieldset Style="padding: 1.5rem;">
+            <RadzenStack Gap="1.5rem" Style="width: 100%;">
 
-    @* Настройка Получаетля *@
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-        <RadzenLabel Text="Город получателя" Component="RecipientCityName" />
-        <RadzenDropDown @bind-Value="@recipientCityId" Data=@cities LoadData=@LoadCities Count="@citiesCount" AllowVirtualization="true" AllowClear="true" Name="RecipientCityName"
-                        AllowFiltering="true" TextProperty="@nameof(City.CityName)" ValueProperty="@nameof(City.Id)" Style="width: 100%; max-width: 400px;" />
-    </RadzenStack>
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-        <RadzenLabel Text="Адрес получателя" Component="RecipientAddress" />
-        <RadzenTextBox @bind-Value=@recipientAddress Style="width: 100%" aria-label="RecipientAddress" />
-    </RadzenStack>
+                <!-- Настройка даты -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Выберите дату" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenDatePicker Name="ChooseDate" @bind-value="@model.OrderDate" Style="width: 100%;"/>
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="ChooseDate" Text="Дата заказа обязательна"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
 
-    @* Вес груза *@
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
-        <RadzenLabel Text="Вес груза" Component="CargoWeight" />
-        <RadzenNumeric Min="1" @bind-Value=@cargoWeight InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" aria-label="RecipientAddress" />
-    </RadzenStack>
+                <!-- Настройка Отправителя -->
+                <!-- Город отправителя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Город отправителя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenDropDown Name="SenderCityName" @bind-Value="@model.SenderCityId"
+                                        Data=@cities LoadData=@LoadCities Count="@citiesCount"
+                                        AllowVirtualization="true" AllowClear="true"
+                                        AllowFiltering="true" TextProperty="@nameof(City.CityName)"
+                                        ValueProperty="@nameof(City.Id)" Style="width: 100%;" />
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="SenderCityName" Text="Город отправителя обязателен"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+                <!-- Адрес отправителя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Адрес отправителя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Name="SenderAddress" @bind-Value=@model.SenderAddress
+                                       Style="width: 100%;" aria-label="SenderAddress" />
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="SenderAddress" Text="Адрес отправителя обязателен"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
 
-    @* кнопка добавления *@
-    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
-        <RadzenStack Style="width: 100%" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
-            <RadzenButton Disabled="!CanAdd()" Click="(_ => DialogService.Close(GetCreateRequest()))" Variant="Variant.Flat" Text="Добавить" Style="width: 150px" />
-        </RadzenStack>
-    </RadzenStack>
+                <!-- Настройка Получателя -->
+                <!-- Город получателя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Город получателя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenDropDown Name="RecipientCityName" @bind-Value="@model.RecipientCityId"
+                                        Data=@cities LoadData=@LoadCities Count="@citiesCount"
+                                        AllowVirtualization="true" AllowClear="true"
+                                        AllowFiltering="true" TextProperty="@nameof(City.CityName)"
+                                        ValueProperty="@nameof(City.Id)" Style="width: 100%;" />
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="RecipientCityName" Text="Город получателя обязателен"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+                <!-- Адрес получателя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Адрес получателя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Name="RecipientAddress" @bind-Value=@model.RecipientAddress
+                                       Style="width: 100%;" aria-label="RecipientAddress" />
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="RecipientAddress" Text="Адрес получателя обязателен"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Вес груза -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Вес груза" Component="CargoWeight" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenNumeric Name="CargoWeight" @bind-Value=@model.CargoWeight Min="1"
+                                       Style="width: 100%;" />
+                        <div style="margin-top: 4px;">
+                            <RadzenRequiredValidator Component="CargoWeight" Text="Вес заказа обязателен"
+                                                     Style="position: absolute; color: var(--rz-danger);" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Кнопка добавления -->
+                <RadzenRow JustifyContent="JustifyContent.Center" class="rz-mt-3">
+                    <RadzenColumn Size="12">
+                        <div style="display: flex; justify-content: center;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"
+                                          Style="min-width: 150px;"></RadzenButton>
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenFieldset>
+    </RadzenTemplateForm>
 </RadzenStack>

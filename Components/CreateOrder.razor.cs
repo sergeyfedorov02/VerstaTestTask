@@ -16,11 +16,7 @@ namespace VerstaTestTask.Components
         [Inject]
         protected ILogger<CreateOrder> Logger { get; set; }
 
-        private DateOnly? date;
-
         private IEnumerable<City> cities;
-        private long? senderCityId;
-        private long? recipientCityId;
         private int citiesCount;
 
         async Task LoadCities(LoadDataArgs args)
@@ -55,28 +51,42 @@ namespace VerstaTestTask.Components
             StateHasChanged();
         }
 
-        private string senderAddress;
-        private string recipientAddress;
-
-        private int? cargoWeight;
-
-        private bool CanAdd()
-        {
-            return senderCityId != null && recipientCityId != null && cargoWeight != null && date != null
-                && !string.IsNullOrWhiteSpace(senderAddress) && !string.IsNullOrWhiteSpace(recipientAddress);
-        }
-
         private CreateOrderRequest GetCreateRequest()
         {
             return new CreateOrderRequest
             {
-                OrderDate = date.GetValueOrDefault(),
-                SenderCityId = senderCityId ?? 0,
-                RecipientCityId =recipientCityId ?? 0,
-                SenderAddress = senderAddress,
-                RecipientAddress = recipientAddress,
-                CargoWeight = cargoWeight ?? 0
+                OrderDate = model.OrderDate.GetValueOrDefault(),
+                SenderCityId = model.SenderCityId ?? 0,
+                SenderAddress = model.SenderAddress,
+                RecipientCityId = model.RecipientCityId ?? 0,
+                RecipientAddress = model.RecipientAddress,
+                CargoWeight = model.CargoWeight ?? 0
             };
+        }
+
+        private EditOrderModel model = new();
+
+        private class EditOrderModel
+        {
+            public DateOnly? OrderDate {  get; set; }
+            public long? SenderCityId { get; set; }
+            public string SenderAddress { get; set; }
+            public long? RecipientCityId { get; set; }
+            public string RecipientAddress { get; set; }
+            public int? CargoWeight { get; set; }
+        }
+        
+        [Inject]
+        protected NotificationService NotificationService { get; set; }
+
+        private void OnSubmit()
+        {
+            DialogService.Close(GetCreateRequest());
+        }
+
+        private void OnInvalidSubmit()
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Ошибка", "Ошибки при заполнении формы");
         }
     }
 }

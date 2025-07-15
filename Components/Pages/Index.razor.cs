@@ -94,12 +94,17 @@ namespace VerstaTestTask.Components.Pages
                 new DialogOptions
                 {
                     Resizable = true,
-                    Draggable = true
+                    Draggable = true,
+                    Width = "700px",
+                    Height = "700px",
+                    Style = "min-width:700px; min-height:700px;",
+                    CloseDialogOnOverlayClick = false
                 }
             ) is CreateOrderRequest createRequest)
             {
                 OrdersService.CreateOrder(createRequest);
 
+                NotificationService.Notify(NotificationSeverity.Success, "Успешно", "Заказ добавлен");
                 await grid.Reload();
             }
         }
