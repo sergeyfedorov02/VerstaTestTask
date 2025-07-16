@@ -90,7 +90,7 @@ namespace VerstaTestTask.Components.Pages
         {
             if (await DialogService.OpenAsync<CreateOrder>(
                 "Добавление заказа",
-                new Dictionary<string, object> { },
+                new Dictionary<string, object> {  },
                 new DialogOptions
                 {
                     Resizable = true,
@@ -107,6 +107,23 @@ namespace VerstaTestTask.Components.Pages
                 NotificationService.Notify(NotificationSeverity.Success, "Успешно", "Заказ добавлен");
                 await grid.Reload();
             }
+        }
+
+        private async Task OnRowDoubleClick(DataGridRowMouseEventArgs<Order> args)
+        {
+            await DialogService.OpenAsync<ViewOrder>(
+                $"Просмотр заказа № {args.Data.Id}",
+                new Dictionary<string, object> { { "OrderData", args.Data } },
+                new DialogOptions
+                {
+                    Resizable = false,
+                    Draggable = true,
+                    Width = "700px",
+                    Height = "700px",
+                    Style = "min-width:700px; min-height:700px;",
+                    CloseDialogOnOverlayClick = false
+                }
+            );
         }
     }
 }

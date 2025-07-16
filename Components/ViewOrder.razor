@@ -1,0 +1,117 @@
+﻿@using VerstaTestTask.Models
+@using VerstaTestTask.Services
+
+<RadzenStack style="min-width: 100%; box-sizing: border-box;">
+    <RadzenTemplateForm TItem="Order" Data=@OrderData Submit="@OnSubmit">
+        <RadzenFieldset Style="padding: 1.5rem;">
+            <RadzenStack Gap="1.5rem" Style="width: 100%;">
+
+                <!-- Дата заказа -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Дата заказа" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.OrderDate.ToShortDateString())"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Город отправителя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Город отправителя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.SenderCityId.ToString())"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Адрес отправителя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Адрес отправителя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.SenderAddress)"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Город получателя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Город получателя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.RecipientCityId.ToString())"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Адрес получателя -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Адрес получателя" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.RecipientAddress)"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Вес груза -->
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="3" class="rz-text-align-start rz-text-nowrap">
+                        <RadzenLabel Text="Вес груза" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="9">
+                        <RadzenTextBox Value="@(OrderData.CargoWeight.ToString())"
+                                       ReadOnly="true"
+                                       Style="width: 100%;
+                                       font-weight: 600;
+                                       color: #000;
+                                       background-color: #f8f9fa;"
+                                       Disabled="true" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <!-- Кнопка закрытия -->
+                <RadzenRow JustifyContent="JustifyContent.Center" class="rz-mt-3">
+                    <RadzenColumn Size="12">
+                        <div style="display: flex; justify-content: center;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Text="Закрыть просмотр"
+                                          Style="min-width: 150px;"></RadzenButton>
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+</RadzenStack>
