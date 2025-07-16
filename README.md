@@ -26,14 +26,14 @@ VerstaTestTask.exe
 ## Информация о проекте:
 1. Для формирования нчального проекта использовался Radzen Blazor Studio
 
-```https://www.radzen.com/blazor-studio/```
+*https://www.radzen.com/blazor-studio/*
 
 2. Приложение является blazor-приложением и использует библиотеку Controls от Radzen
 3. Для доступа к базе данных используется Entity Framework и провайдер SQLite. 
 4. При запуске приложения создатся файл базы данных в каталоге *wwwroot*
 5. Для получения списка городов на русском языке использовался сервис oxilor. Список городов России (первые 100) на русском языке можно получить, используя вызов
 
-```https://data-api.oxilor.com/rest/regions?type=city&countryCode=RU&first=100```
+*https://data-api.oxilor.com/rest/regions?type=city&countryCode=RU&first=100*
 
 6. В базу для примера внесено 10 городов (добавление осуществляется в файле миграции)
 
