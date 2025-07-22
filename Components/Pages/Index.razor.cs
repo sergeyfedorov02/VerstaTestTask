@@ -9,6 +9,8 @@ namespace VerstaTestTask.Components.Pages
 {
     public partial class Index
     {
+        // inject - это внедрение зависимости(dependency injection) для компонентов asp.net core
+        // чтобы самому не создавать элементы, а чтобы asp.net core сам их подставлял
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
@@ -28,7 +30,7 @@ namespace VerstaTestTask.Components.Pages
         protected NotificationService NotificationService { get; set; }
 
         [Inject]
-        protected OrdersService OrdersService { get; set; }
+        protected IOrdersService OrdersService { get; set; }
 
         [Inject]
         protected ILogger<Index> Logger { get; set; }
@@ -42,6 +44,11 @@ namespace VerstaTestTask.Components.Pages
         protected int pageSize = 20;
         protected readonly IEnumerable<int> pageSizeOptions = [10, 20, 50];
 
+        /// <summary>
+        /// Подгрузка элементов в гриде/таблице
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         protected async Task LoadData(LoadDataArgs args)
         {
             isLoading = true;
@@ -71,6 +78,10 @@ namespace VerstaTestTask.Components.Pages
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Реализация метода сброса всех фильтров
+        /// </summary>
+        /// <returns></returns>
         protected async Task ResetFiltersAsync()
         {
             foreach (var c in grid.ColumnsCollection)
@@ -81,11 +92,21 @@ namespace VerstaTestTask.Components.Pages
             await grid.Reload();
         }
 
+        /// <summary>
+        /// Подсветки подсказок для выбранного элемента
+        /// </summary>
+        /// <param name="elementReference"></param>
+        /// <param name="text"></param>
+        /// <param name="options"></param>
         protected void ShowTooltip(ElementReference elementReference, string text, TooltipOptions options = null)
         {
             TooltipService.Open(elementReference, text, options);
         }
 
+        /// <summary>
+        /// Вызов диалогового окна для создания заказов
+        /// </summary>
+        /// <returns></returns>
         protected async Task CreateOrder()
         {
             if (await DialogService.OpenAsync<CreateOrder>(
@@ -109,6 +130,11 @@ namespace VerstaTestTask.Components.Pages
             }
         }
 
+        /// <summary>
+        /// Вызов диалогового окна по двойному нажатию для просмотра заказа
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private async Task OnRowDoubleClick(DataGridRowMouseEventArgs<Order> args)
         {
             await DialogService.OpenAsync<ViewOrder>(

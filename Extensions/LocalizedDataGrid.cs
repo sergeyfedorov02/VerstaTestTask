@@ -2,8 +2,13 @@
 
 namespace VerstaTestTask.Extensions
 {
+    /// <summary>
+    /// Для русификации грида
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
     public class LocalizedDataGrid<TItem> : RadzenDataGrid<TItem>
     {
+
         public LocalizedDataGrid()
         {
             AndOperatorText = "И";

@@ -7,9 +7,15 @@ using VerstaTestTask.Services;
 
 namespace VerstaTestTask
 {
-    public class OrdersService
+    /// <summary>
+    /// Сервис для получения данных из БД (использует сервис)
+    /// </summary>
+    public class OrdersService : IOrdersService
     {
         private ILogger<OrdersService> Logger { get; }
+        /// <summary>
+        /// // Контекст - для связи объектной модели и БД (напрямую с БД не работаю)
+        /// </summary>
         private Func<VerstaDbContext> ContextProvider { get; }
 
         public OrdersService(Func<VerstaDbContext> provider, ILogger<OrdersService> logger)

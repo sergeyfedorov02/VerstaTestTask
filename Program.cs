@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Radzen;
+using VerstaTestTask;
 using VerstaTestTask.Components;
 using VerstaTestTask.Data;
+using VerstaTestTask.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,7 @@ builder.Services.AddRadzenCookieThemeService(options =>
 builder.Services.AddHttpClient();
 
 //Регистрация сервиса
-builder.Services.AddScoped<VerstaTestTask.OrdersService>();
+builder.Services.AddScoped<IOrdersService, OrdersService>();
 
 builder.Services.AddDbContext<VerstaDbContext>(options =>
 {

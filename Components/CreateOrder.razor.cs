@@ -11,7 +11,7 @@ namespace VerstaTestTask.Components
         protected DialogService DialogService { get; set; }
 
         [Inject]
-        protected OrdersService OrdersService { get; set; }
+        protected IOrdersService OrdersService { get; set; }
 
         [Inject]
         protected ILogger<CreateOrder> Logger { get; set; }
@@ -19,6 +19,11 @@ namespace VerstaTestTask.Components
         private IEnumerable<City> cities;
         private int citiesCount;
 
+        /// <summary>
+        /// Подгрузка городов из БД
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         async Task LoadCities(LoadDataArgs args)
         {
             try
@@ -51,6 +56,10 @@ namespace VerstaTestTask.Components
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Создание запроса к сервису/OrderService на создание нового заказа
+        /// </summary>
+        /// <returns></returns>
         private CreateOrderRequest GetCreateRequest()
         {
             return new CreateOrderRequest
@@ -66,6 +75,9 @@ namespace VerstaTestTask.Components
 
         private EditOrderModel model = new();
 
+        /// <summary>
+        /// Модель для биндинга в форме (в запросе все поля уже заняты)
+        /// </summary>
         private class EditOrderModel
         {
             public DateOnly? OrderDate {  get; set; }

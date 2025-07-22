@@ -6,7 +6,14 @@ namespace VerstaTestTask.Extensions
 {
     public static class QueryExtensions
     {
-
+        /// <summary>
+        /// Для получения данных из БД при фильтрации и постраничной загрузки
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="query"></param>
+        /// <param name="defaultOrder"></param>
+        /// <returns></returns>
         public static async Task<ODataServiceResult<T>> GetDataAsync<T>(this IQueryable<T> items, Query query, string defaultOrder = null)
         {
             if (!string.IsNullOrEmpty(query.Filter))
