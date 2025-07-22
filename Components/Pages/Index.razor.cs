@@ -53,26 +53,25 @@ namespace VerstaTestTask.Components.Pages
         {
             isLoading = true;
 
-            try
+            var result = await OrdersService.GetOrders(new Query
             {
-                var result = await OrdersService.GetOrders(new Query
-                {
-                    Skip = args.Skip,
-                    Top = args.Top,
-                    Filter = args.Filter,
-                    OrderBy = args.OrderBy
-                });
+                Skip = args.Skip,
+                Top = args.Top,
+                Filter = args.Filter,
+                OrderBy = args.OrderBy
+            });
 
-                count = result.Count;
-                orders = [.. result.Value];
-            }
-            catch (Exception ex)
+            if (result.IsOk)
             {
-                Logger.LogError(ex, $"Ошибка при получении таблицы заказов (filter={args.Filter})");
+                count = result.Data.Count;
+                orders = [.. result.Data.Value];
+            }
+            else
+            {
+                Logger.LogError(result.Exception, $"Ошибка при получении таблицы заказов (filter={args.Filter})");
                 count = 0;
                 orders = [];
-            }
-
+            }         
 
             isLoading = false;
             StateHasChanged();
@@ -123,9 +122,18 @@ namespace VerstaTestTask.Components.Pages
                 }
             ) is CreateOrderRequest createRequest)
             {
-                OrdersService.CreateOrder(createRequest);
+                var result = OrdersService.CreateOrder(createRequest);
 
-                NotificationService.Notify(NotificationSeverity.Success, "Успешно", "Заказ добавлен");
+                if (result.IsOk)
+                {
+                    NotificationService.Notify(NotificationSeverity.Success, "Успешно", "Заказ добавлен");
+                }
+                else
+                {
+                    Logger.LogError("Ошибка при добавлении заказа", result.Exception);
+                    NotificationService.Notify(NotificationSeverity.Error, "Безуспешно", "Заказ НЕ добавлен");
+                }
+
                 await grid.Reload();
             }
         }

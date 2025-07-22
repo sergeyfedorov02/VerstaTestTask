@@ -25,30 +25,30 @@ namespace VerstaTestTask.Components
         /// <param name="args"></param>
         /// <returns></returns>
         async Task LoadCities(LoadDataArgs args)
-        {
-            try
+        {   
+            var filterValue = args.Filter;
+
+            if (!string.IsNullOrEmpty(filterValue))
             {
-                var filterValue = args.Filter;
-
-                if (!string.IsNullOrEmpty(filterValue))
-                {
-                    filterValue = $"x => x.CityName.ToLower().Contains(\"{filterValue}\".ToLower())";
-                }
-
-                var result = await OrdersService.GetCities(new Query
-                {
-                    Skip = args.Skip,
-                    Top = args.Top,
-                    Filter = filterValue,
-                    OrderBy = args.OrderBy
-                });
-
-                citiesCount = result.Count;
-                cities = [.. result.Value];
+                filterValue = $"x => x.CityName.ToLower().Contains(\"{filterValue}\".ToLower())";
             }
-            catch (Exception ex)
+
+            var result = await OrdersService.GetCities(new Query
             {
-                Logger.LogError(ex, $"Ошибка при получении списка городов (filter={args.Filter})");
+                Skip = args.Skip,
+                Top = args.Top,
+                Filter = filterValue,
+                OrderBy = args.OrderBy
+            });
+
+            if (result.IsOk)
+            {
+                citiesCount = result.Data.Count;
+                cities = [.. result.Data.Value];
+            }
+            else
+            {
+                Logger.LogError(result.Exception, $"Ошибка при получении списка городов (filter={args.Filter})");
                 citiesCount = 0;
                 cities = [];
             }

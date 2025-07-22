@@ -29,13 +29,22 @@ namespace VerstaTestTask
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<ODataServiceResult<Order>> GetOrders(Query query)
+        public async Task<ResultWrapper<ODataServiceResult<Order>>> GetOrders(Query query)
         {
-            await using var context = ContextProvider();
+            try
+            {
+                await using var context = ContextProvider();
 
-            var result = context.Orders.Include(o => o.SenderCity).Include(o => o.RecipientCity).AsQueryable();
+                var result = context.Orders.Include(o => o.SenderCity).Include(o => o.RecipientCity).AsQueryable();
 
-            return await result.GetDataAsync(query, "Id asc");
+                return ResultWrapper<ODataServiceResult<Order>>.CreateFromResult(await result.GetDataAsync(query, "Id asc"));
+            }
+            catch (Exception ex)
+            {
+                return ResultWrapper<ODataServiceResult<Order>>.CreateFromException(ex);
+            }
+
+            
         }
 
         /// <summary>
@@ -43,34 +52,52 @@ namespace VerstaTestTask
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<ODataServiceResult<City>> GetCities(Query query)
+        public async Task<ResultWrapper<ODataServiceResult<City>>> GetCities(Query query)
         {
             await using var context = ContextProvider();
 
-            var result = context.Cities.AsQueryable();
+            try
+            {
+                var result = context.Cities.AsQueryable();
 
-            return await result.GetDataAsync(query, "Id asc");
+                return ResultWrapper<ODataServiceResult<City>>.CreateFromResult(await result.GetDataAsync(query, "Id asc"));
+            }
+            catch (Exception ex)
+            {
+                return ResultWrapper<ODataServiceResult<City>>.CreateFromException(ex);
+            }
+
         }
 
         /// <summary>
         /// Создание заказа
         /// </summary>
         /// <param name="request"></param>
-        public void CreateOrder(CreateOrderRequest request)
+        public ResultWrapper<Order> CreateOrder(CreateOrderRequest request)
         {
             using var context = ContextProvider();
 
-            context.Orders.Add(new Order
+            try
             {
-                OrderDate = request.OrderDate,
-                SenderCityId = request.SenderCityId,
-                RecipientCityId = request.RecipientCityId,
-                SenderAddress = request.SenderAddress,
-                RecipientAddress = request.RecipientAddress,
-                CargoWeight = request.CargoWeight
-            });
+                var newOrder = new Order
+                {
+                    OrderDate = request.OrderDate,
+                    SenderCityId = request.SenderCityId,
+                    RecipientCityId = request.RecipientCityId,
+                    SenderAddress = request.SenderAddress,
+                    RecipientAddress = request.RecipientAddress,
+                    CargoWeight = request.CargoWeight
+                };
 
-            context.SaveChanges();
+                context.Orders.Add(newOrder);
+
+                context.SaveChanges();
+                return ResultWrapper<Order>.CreateFromResult(newOrder);
+            }
+            catch (Exception ex)
+            {
+                return ResultWrapper<Order>.CreateFromException(ex);
+            }
         }
 
         /// <summary>
@@ -78,11 +105,20 @@ namespace VerstaTestTask
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        public async Task<Order> GetOrderByIdAsync(long orderId)
+        public async Task<ResultWrapper<Order>> GetOrderByIdAsync(long orderId)
         {
             await using var context = ContextProvider();
 
-            return await context.Orders.Include(o => o.SenderCity).Include(o => o.RecipientCity).FirstOrDefaultAsync(o => o.Id == orderId);
+            try
+            {
+                var result = await context.Orders.Include(o => o.SenderCity).Include(o => o.RecipientCity).FirstOrDefaultAsync(o => o.Id == orderId);
+
+                return ResultWrapper<Order>.CreateFromResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ResultWrapper<Order>.CreateFromException(ex);
+            }
         }
     }
 }
