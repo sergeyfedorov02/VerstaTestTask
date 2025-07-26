@@ -21,7 +21,7 @@ builder.Services.AddRadzenCookieThemeService(options =>
 });
 builder.Services.AddHttpClient();
 
-//Регистрация сервиса
+//Р РµРіРёСЃС‚СЂР°С†РёСЏ СЃРµСЂРІРёСЃР°
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 
 builder.Services.AddDbContext<VerstaDbContext>(options =>
@@ -60,7 +60,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
-// Миграция базы данных
+// РњРёРіСЂР°С†РёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<VerstaDbContext>();
 db.Database.SetCommandTimeout(60);
 db.Database.Migrate();
